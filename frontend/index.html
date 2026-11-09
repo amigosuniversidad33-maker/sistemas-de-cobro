@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cobros IA · Sistema Outbound</title>
+  <link rel="icon" href="/static/img/icono.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/estilos.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <!-- Inicio de sesión -->
+  <main id="vista-login" class="login" hidden>
+    <section class="login-panel" aria-labelledby="titulo-login">
+      <div class="login-marca">
+        <span class="logo" aria-hidden="true"></span>
+        <div>
+          <h1 id="titulo-login">Sistema Outbound de Cobros</h1>
+          <p>Gestión de cobranza por campaña con IA</p>
+        </div>
+      </div>
+      <form id="form-login" novalidate>
+        <label for="login-usuario">Usuario</label>
+        <input id="login-usuario" name="usuario" autocomplete="username" required maxlength="50">
+        <label for="login-password">Contraseña</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="128">
+        <p id="login-error" class="error-form" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primario btn-bloque">Iniciar sesión</button>
+      </form>
+      <p class="login-nota">Acceso solo para personal interno autorizado. No existe registro público.</p>
+    </section>
+    <aside class="login-lado" aria-hidden="true">
+      <div class="login-lado-contenido">
+        <p class="eyebrow">Universidad Regional de Guatemala</p>
+        <h2>Agentes IA, campañas por tramo de mora y supervisión en un solo lugar.</h2>
+        <ul>
+          <li>Recordatorio / Mora Temprana · 1–30 días</li>
+          <li>Mora Tardía · 31–60 días</li>
+          <li>Voz Deepgram · Telefonía FreeSWITCH/SIP</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Aplicación -->
+  <div id="vista-app" class="app" hidden>
+    <aside id="menu" class="menu" aria-label="Navegación principal">
+      <div class="menu-marca">
+        <span class="logo" aria-hidden="true"></span>
+        <div><strong>Cobros IA</strong><small>Outbound · Piloto</small></div>
+      </div>
+      <nav id="nav"></nav>
+    </aside>
+    <div class="principal">
+      <header class="barra">
+        <button id="btn-menu" class="btn-icono solo-movil" aria-label="Abrir menú" aria-expanded="false"></button>
+        <h1 id="titulo-pagina" class="barra-titulo">Panel</h1>
+        <div id="aviso-pausa" class="aviso-pausa" hidden role="status"></div>
+        <div class="barra-usuario">
+          <span id="usuario-nombre"></span>
+          <span id="usuario-rol" class="chip"></span>
+          <button id="btn-salir" class="btn btn-secundario btn-chico">Salir</button>
+        </div>
+      </header>
+      <main id="contenido" tabindex="-1" class="contenido"></main>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <dialog id="modal" class="modal" aria-labelledby="modal-titulo">
+    <form method="dialog" class="modal-cuerpo" id="modal-form">
+      <header class="modal-cab">
+        <h2 id="modal-titulo"></h2>
+        <button type="button" class="btn-icono" id="modal-cerrar" aria-label="Cerrar"></button>
+      </header>
+      <div id="modal-contenido"></div>
+      <footer class="modal-pie" id="modal-pie"></footer>
+    </form>
+  </dialog>
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

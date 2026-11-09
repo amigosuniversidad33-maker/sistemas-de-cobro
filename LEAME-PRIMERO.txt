@@ -1,0 +1,35 @@
+SISTEMA OUTBOUND DE COBROS CON IA - INSTALACION RAPIDA
+=======================================================
+
+WINDOWS
+-------
+1. Instale Python 3.13 desde https://www.python.org/downloads/
+   (marque la casilla "Add python.exe to PATH").
+2. Encienda WAMP y espere a que el icono quede en VERDE.
+3. Descomprima esta carpeta, por ejemplo en C:\sistema-cobros
+4. Doble clic en INICIAR.bat
+   - La primera vez tarda de 2 a 5 minutos (necesita Internet).
+   - Al final muestra el USUARIO y la CONTRASENA del administrador UNA SOLA VEZ: anotelos.
+5. Listo. Desde ahora entre con:
+      http://localhost/cobros/            -> sistema completo
+      http://localhost/cobros/llamadas/   -> modulo sencillo de llamadas (Twilio)
+6. Para apagarlo: doble clic en DETENER.bat
+
+ACTUALIZAR UNA INSTALACION ANTERIOR
+-----------------------------------
+DETENER.bat -> descomprima este ZIP en la MISMA carpeta (acepte reemplazar) -> INICIAR.bat
+-> en el navegador presione Ctrl + F5. Sus datos y su backend\.env se conservan.
+
+MAC
+---
+Siga docs/MAC.md (usa MAMP en lugar de WAMP e INICIAR.command en lugar de INICIAR.bat).
+
+QUE INCLUYE ESTA VERSION
+------------------------
+- Voz natural del agente con Deepgram (voz Estrella, espanol latino).
+- Control de velocidad de la voz en "Prueba de Llamada".
+- Saludo: "Buen dia, le saluda Sofia, de Financiera Progreso..." (si le preguntan si es un robot, dice la verdad).
+- Twilio configurado. Para llamar a un celular desde el sistema completo falta URL_PUBLICA (ngrok): docs/TWILIO.md
+- Avisos de FreeSWITCH / troncal SIP en rojo: son normales si no hay linea telefonica contratada.
+
+IMPORTANTE: este ZIP contiene claves de Deepgram y Twilio. No lo comparta.

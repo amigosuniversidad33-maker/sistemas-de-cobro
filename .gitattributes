@@ -1,0 +1,10 @@
+# Scripts que corren en Linux/Mac (VM de FreeSWITCH, INICIAR.command): siempre con fin de línea LF
+*.sh text eol=lf
+*.command text eol=lf
+# Scripts de Windows con CRLF
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+# Binarios
+*.docx binary
+*.png binary
+*.jpg binary

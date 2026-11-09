@@ -1,0 +1,21 @@
+# Dependencias con versiones fijadas (Python 3.12 o 3.13 en Windows 10/11).
+# Instalar dentro del entorno virtual:  pip install -r requirements.txt
+fastapi==0.141.1
+starlette==1.6.0
+uvicorn==0.53.0
+pydantic==2.13.5
+pydantic-settings==2.14.2
+python-dotenv==1.2.3
+python-multipart==0.0.32
+SQLAlchemy==2.0.53
+alembic==1.19.2
+PyMySQL==1.1.2
+cryptography==50.0.1
+httpx==0.28.1
+openpyxl==3.1.5
+tzdata==2025.2
+
+# Pruebas
+pytest==9.1.1
+paramiko==3.5.1  # copia de audios a FreeSWITCH en otra máquina (SFTP)
+websockets==13.1  # reconocimiento de voz en streaming (Deepgram) en llamadas telefónicas

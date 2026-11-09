@@ -1,0 +1,19 @@
+# Secretos y datos locales (NUNCA al repositorio)
+backend/.env
+backend/datos/
+*.sql.enc
+.env.txt
+*.env.respaldo*
+# Módulo de llamadas de WAMP: la configuración real lleva credenciales de Twilio (copiar config.example.php)
+wamp/cobros/llamadas/config.php
+# Entregables generados (ZIP)
+entrega/
+# Python
+__pycache__/
+*.pyc
+backend/.venv/
+.pytest_cache/
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
