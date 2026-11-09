@@ -142,5 +142,5 @@ def test_voz_sin_pausas_por_comas():
     from app.voz.deepgram import texto_para_voz
 
     assert texto_para_voz("Buen día, le saluda Sofía, de Financiera Progreso.") == "Buen día le saluda Sofía de Financiera Progreso."
-    assert texto_para_voz("Su saldo es Q1,500.00, gracias.") == "Su saldo es Q1,500.00 gracias."
+    assert texto_para_voz("Su saldo es Q1,500.00, gracias.") == "Su saldo es mil quinientos quetzales gracias."
     assert "," not in twilio.habla("Hola, ¿me escucha?")

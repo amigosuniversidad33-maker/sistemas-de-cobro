@@ -186,3 +186,18 @@ def test_acceso_desde_la_red_local(monkeypatch):
     assert internet.get("/api/salud").status_code == 403
     dominio = TestClient(app, base_url="http://cobros.ejemplo.com:8000", client=("192.168.1.30", 50000))
     assert dominio.get("/api/salud").status_code == 403  # Host con nombre de dominio (DNS rebinding)
+
+
+def test_pantallas_con_version_y_sin_salir_de_frontend():
+    """El index apunta a /static/v<versión>/ (el navegador no usa copias viejas) y esa ruta no permite salir de frontend."""
+    import re
+
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    c = TestClient(app)
+    v = re.search(r'"/static/v(\w+)/js/app\.js"', c.get("/").text)[1]
+    assert c.get(f"/static/v{v}/js/app.js").status_code == 200
+    for ruta in ("../backend/.env", "..%2Fbackend%2F.env", "../../Windows/win.ini"):
+        assert c.get(f"/static/v{v}/{ruta}").status_code == 404

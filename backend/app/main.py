@@ -6,7 +6,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -139,9 +139,24 @@ def salud():
     return {"estado": "ok"}
 
 
+def version_frontend() -> str:
+    """Cambia cada vez que se modifica cualquier archivo de pantalla (fecha de modificación más reciente)."""
+    return format(int(max(p.stat().st_mtime for p in FRONTEND.rglob("*") if p.is_file())), "x")
+
+
 if FRONTEND.exists():
+    @app.get("/static/v{version}/{ruta:path}", include_in_schema=False)
+    def estatico_versionado(version: str, ruta: str):
+        """Mismos archivos que /static, bajo una ruta que incluye la versión: al cambiar cualquier pantalla cambia la
+        ruta y el navegador está obligado a descargarla de nuevo (no puede usar una copia vieja de su caché)."""
+        archivo = (FRONTEND / ruta).resolve()
+        if not archivo.is_file() or FRONTEND.resolve() not in archivo.parents:
+            return JSONResponse({"detail": "No encontrado."}, status_code=404)
+        return FileResponse(archivo)
+
     app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
 
     @app.get("/", include_in_schema=False)
     def inicio():
-        return FileResponse(FRONTEND / "index.html")
+        html = (FRONTEND / "index.html").read_text(encoding="utf-8")
+        return HTMLResponse(html.replace('"/static/', f'"/static/v{version_frontend()}/'))

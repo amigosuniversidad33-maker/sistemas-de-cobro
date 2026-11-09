@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from ..config import get_settings
 from ..ia.proveedor import ErrorProveedor
 from ..servicios import consumo
+from .cifras import cifras_para_voz
 
 URL_STT = "https://api.deepgram.com/v1/listen"
 URL_TTS = "https://api.deepgram.com/v1/speak"
@@ -41,9 +42,10 @@ _COMA = re.compile(r"(?<!\d)\s*[,;]\s*|\s*[,;]\s*(?!\d)")
 
 def texto_para_voz(texto: str) -> str:
     """Quita comas y punto y coma entre palabras: las voces hacen una pausa larga en cada una y suena lento.
-    Se conservan los puntos y signos de pregunta (pausa entre oraciones) y las comas de las cifras (Q1,500.00).
-    Solo cambia lo que se pronuncia; la transcripción guarda el texto original."""
-    return re.sub(r"\s{2,}", " ", _COMA.sub(" ", texto or "")).strip()
+    Se conservan los puntos y signos de pregunta (pausa entre oraciones). Los montos se dicen en palabras
+    («catorce mil quinientos setenta y siete quetzales con sesenta y tres centavos»), así no se leen mal los miles ni los
+    centavos. Solo cambia lo que se pronuncia; la transcripción guarda el texto original."""
+    return re.sub(r"\s{2,}", " ", _COMA.sub(" ", cifras_para_voz(texto or ""))).strip()
 
 
 def _cliente() -> httpx.Client:

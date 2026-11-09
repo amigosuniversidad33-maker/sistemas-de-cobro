@@ -1,6 +1,7 @@
 // Módulo Prueba de Llamada: conversación REAL con la API del modelo por texto y por voz en el navegador (Deepgram).
 // Importante: la voz en el navegador NO es una llamada telefónica; se identifica como "VOZ DE PRUEBA".
 import { api, get, post, put } from "../api.js";
+import { cifrasParaVoz } from "../cifras.js";
 import { icono } from "../iconos.js";
 import { boton, chip, dinero, errorToast, esc, modo, opcionesDe, tablaPaginada, tarjeta, toast, fecha } from "../ui.js";
 
@@ -379,9 +380,9 @@ function vozEspanol() {
   return voces.find((v) => v.name === guardada) || voces[0] || null;
 }
 
-// Igual que el backend: sin comas entre palabras (cada coma es una pausa larga); se conservan las de las cifras.
+// Igual que el backend: montos en palabras y sin comas entre palabras (cada coma es una pausa larga).
 function textoParaVoz(texto) {
-  return String(texto || "").replace(/(?<!\d)\s*[,;]\s*|\s*[,;]\s*(?!\d)/g, " ").replace(/\s{2,}/g, " ").trim();
+  return cifrasParaVoz(texto).replace(/(?<!\d)\s*[,;]\s*|\s*[,;]\s*(?!\d)/g, " ").replace(/\s{2,}/g, " ").trim();
 }
 
 export function hablarNavegador(texto, alTerminar) {
