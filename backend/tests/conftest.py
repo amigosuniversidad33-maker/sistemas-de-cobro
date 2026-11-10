@@ -10,6 +10,9 @@ from pathlib import Path
 
 _TMP = Path(tempfile.mkdtemp(prefix="cobros_test_"))
 os.environ["DATABASE_URL"] = f"sqlite:///{(_TMP / 'test.db').as_posix()}"
+# El respaldo y las migraciones prefieren DATABASE_URL_MIGRACIONES: si .env la define (MySQL real), las pruebas
+# volcarían y restaurarían la base real. Se fuerza a la misma base temporal.
+os.environ["DATABASE_URL_MIGRACIONES"] = os.environ["DATABASE_URL"]
 os.environ["SCRYPT_N"] = "1024"
 os.environ["ANTHROPIC_API_KEY"] = "clave-de-prueba-no-real"
 os.environ["DEEPGRAM_API_KEY"] = ""
