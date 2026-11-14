@@ -86,6 +86,34 @@ def cmd_crear_admin(args):
     print(f"Administrador '{usuario}' creado.")
 
 
+def cmd_restablecer_clave(args):
+    """Nueva contraseña para un usuario que la olvidó. Se escribe en la terminal sin mostrarse (nunca va en argumentos).
+    También desbloquea la cuenta y revoca sus sesiones abiertas."""
+    from .auditoria import auditar
+
+    with sesion_db() as db:
+        u = db.execute(select(Usuario).where(Usuario.usuario == args.usuario.strip().lower())).scalar_one_or_none()
+        if u is None:
+            sys.exit(f"No existe el usuario '{args.usuario}'.")
+        while True:
+            p1 = getpass.getpass(f"Nueva contraseña para '{u.usuario}' (mín. 10, 3 tipos de caracteres; no se ve al escribir): ")
+            p2 = getpass.getpass("Repita la contraseña: ")
+            if p1 != p2:
+                print("No coinciden.")
+                continue
+            try:
+                validar_fortaleza(p1)
+                break
+            except Exception as e:  # HTTPException con detalle
+                print(getattr(e, "detail", str(e)))
+        u.hash_password = hash_password(p1)
+        u.intentos_fallidos, u.bloqueado_hasta, u.estado = 0, None, "ACTIVO"
+        db.execute(update(Sesion).where(Sesion.id_usuario == u.id_usuario, Sesion.revocada_en.is_(None))
+                   .values(revocada_en=ahora_utc()))
+        auditar(db, "CLAVE_RESTABLECIDA_CLI", "usuario", u.id_usuario, {"usuario": u.usuario})
+    print(f"Contraseña de '{u.usuario}' actualizada. Ya puede iniciar sesión.")
+
+
 def cmd_demo(_):
     from .servicios import campanas as srv
     from .servicios import importacion
@@ -169,6 +197,9 @@ def main():
     a.add_argument("--forzar", action="store_true", help="Permite crear otro administrador")
     a.add_argument("--generar", action="store_true", help="Genera una contraseña aleatoria y la muestra una vez")
     a.set_defaults(f=cmd_crear_admin)
+    r = sub.add_parser("restablecer-clave", help="Nueva contraseña para un usuario (se escribe sin mostrarse)")
+    r.add_argument("--usuario", default="admin")
+    r.set_defaults(f=cmd_restablecer_clave)
     sub.add_parser("demo").set_defaults(f=cmd_demo)
     pu = sub.add_parser("purgar")
     pu.add_argument("--si", action="store_true")

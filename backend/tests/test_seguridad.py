@@ -201,3 +201,26 @@ def test_pantallas_con_version_y_sin_salir_de_frontend():
     assert c.get(f"/static/v{v}/js/app.js").status_code == 200
     for ruta in ("../backend/.env", "..%2Fbackend%2F.env", "../../Windows/win.ini"):
         assert c.get(f"/static/v{v}/{ruta}").status_code == 404
+
+
+def test_restablecer_clave_por_cli(monkeypatch):
+    """La nueva contraseña se pide sin mostrarse, desbloquea la cuenta y revoca las sesiones abiertas."""
+    import argparse
+
+    from sqlalchemy import select
+
+    from app import cli
+    from app.db import SessionLocal
+    from app.models import Usuario
+    from app.security import verificar_password
+
+    nueva = "Clave-Segura-2026"  # la misma de conftest, para no afectar a otras pruebas que usan este usuario
+    monkeypatch.setattr(cli.getpass, "getpass", lambda _: nueva)
+    with SessionLocal() as db:
+        u = db.execute(select(Usuario).where(Usuario.usuario == "supervisor")).scalar_one()
+        u.intentos_fallidos = 9
+        db.commit()
+    cli.cmd_restablecer_clave(argparse.Namespace(usuario="supervisor"))
+    with SessionLocal() as db:
+        u = db.execute(select(Usuario).where(Usuario.usuario == "supervisor")).scalar_one()
+        assert verificar_password(nueva, u.hash_password) and u.intentos_fallidos == 0
